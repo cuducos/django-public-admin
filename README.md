@@ -1,28 +1,62 @@
-# Draft for Django Public Admin
+# _Draft_ for Django Public Admin
 
-A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/).
+A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly acessible data.
 
 ## How does it works
 
-1. `PublicAdminModelAdmin` work as a clone from native `ModelAdmin`, but what it does is to stop actions that create/delete entries.
+1. `PublicAdminSite` works as a clone of Django's native `AdminSite`, but it looks at the HTTP request and the URL to decide whether they should exist in a public and read-only dashboard.
+1. `PublicModelAdmin` work as a clone of Django's native `ModelAdmin`, but what it does is to stop actions that would create, edit or delete objects.
+1. `DummyUser` is just a an implementation detail, since Django requires an user to process the requests.
 
-2. `PublicAdminSite` does a similar job, but for requests, looking at the HTTP request and the URL to decide whether exist (are authorized) or not.
+## Instructions — _they do not work, but are helpful in the API-driven design mindset_
 
-3. `DummyUser` is just a detail, Django require a user to do requests.
+### Install
 
-## TODO list
+> As this package is not finished nor published, this command does not work just yet. However, [Poetry](https://python-poetry.org/) should install it in the local _virtualenv_ one can access with `poetry shell`.
 
-- [ ] Make `pytest` run (maybe using `pytest-django`)
-- [ ] Make tests pass
-- [ ] Manual test (for example, replace [Jarbas](https://github.com/okfn-brasil/serenata-de-amor/tree/master/jarbas)'s `jarbas.public_html` by this module):
-    - [ ] Spin up a Django application locally
-    - [ ] Use Poetry to build a installable version of this package `django-public-admin`
-    - [ ] Install this package `django-public-admin`
-    - [ ] Test is it really works (document how to wire up things so we have instructions to add here)
+```console
+$ pip install django-public-admin
+```
 
-## Instructions
+### Create your _Django Public Admin_ instance
 
-1. Install this package
-2. Import it in your `admin.py`: `from public_admin.sites import PublicAdminSite`
-3. Create a `PublicAdminSite` instance with the name of your apps and models to be publicly accessible, for example: `public_admin = PublicAdminSite("dashboard", public_apps=("chamber_of_deputies",), public_models=("reimbursements",))`
-4. Import the instance you just created in your `urls.py` to create the endpoints, for example: `path('dashboard/', public_admin.urls)`
+Just like one would create a regular `admin.py`, you can create a module using _Django Public Admin_'s `PublicAdminSite` and `PublicModelAdmin`:
+
+```python
+from public_admin.sites import PublicAdminSite, PublicModelAdmin
+
+from my_website.my_open_house.models import Beverage, Snack
+
+
+class BeverageModelAdmin(PublicModelAdmin):
+    pass
+
+
+class SnackModelAdmin(PublicModelAdmin):
+    pass
+
+
+public_admin = PublicAdminSite(
+    "dashboard",  # you name it as you wish
+    public_apps=("my_open_house",),  # all your apps that can be public accessible
+    public_models=("beverage", "snack")  # all your models from those apps that can be public accessible
+)
+public_admin.register(Beverage, BeverageModelAdmin)
+public_admin.register(Sanck, SanckModelAdmin)
+```
+
+### Add your _Django Public Admin_ URLs
+
+In your `urls.py`, import the `public_html` (or whatever you've named it earlier) in your URLs file and create the endpoints:
+
+```python
+from django.urls import path
+
+from my_website.my_open_house.admin import public_admin
+
+
+url = [
+    # …
+    path("dashboard/", public_admin.urls)
+]
+```

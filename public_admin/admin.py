@@ -3,7 +3,7 @@ from django.contrib.admin import ModelAdmin
 from public_admin.sites import PublicAdminSite
 
 
-class PublicAdminModelAdmin(ModelAdmin):
+class PublicModelAdmin(ModelAdmin):
     def has_add_permission(self, request):
         return False
 
