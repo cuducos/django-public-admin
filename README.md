@@ -12,8 +12,9 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
     - [ ] Install this package `django-public-admin`
     - [ ] Test is it really works (document how to wire up things so we have instructions to add here)
 
-### Steps to test it with Jarbas
+## Instructions
 
-- [ ] Deleting Jarbas's `public_html` module
-- [ ] Instantiate a `public_admin` in the `dashbaord.admin` module, something like `public_html.PublicAdminSite("dashboard", public_apps=("chamber_of_deputies",), public_models=("reimbursements",))`
-- [ ] Add `public_admin.urls` to the `dashboard/urls.py`
+1. Install this package
+2. Import it in your `admin.py`: `from public_admin.sites import PublicAdminSite`
+3. Create a `PublicAdminSite` instance with the name of your apps and models to be publicly accessible, for example: `public_admin = PublicAdminSite("dashboard", public_apps=("chamber_of_deputies",), public_models=("reimbursements",))`
+4. Import the instance you just created in your `urls.py` to create the endpoints, for example: `path('dashboard/', public_admin.urls)`
