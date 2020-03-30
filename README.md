@@ -2,6 +2,14 @@
 
 A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/).
 
+## How does it works
+
+1. `PublicAdminModelAdmin` work as a clone from native `ModelAdmin`, but what it does is to stop actions that create/delete entries.
+
+2. `PublicAdminSite` does a similar job, but for requests, looking at the HTTP request and the URL to decide whether exist (are authorized) or not.
+
+3. `DummyUser` is just a detail, Django require a user to do requests.
+
 ## TODO list
 
 - [ ] Make `pytest` run (maybe using `pytest-django`)
