@@ -60,3 +60,7 @@ url = [
     path("dashboard/", public_admin.urls)
 ]
 ```
+
+## License & Credits
+
+This package is licensed under [MIT license](/LICENSE) and acknowledge [Serenata de Amor](https://github.com/okfn-brasil/serenata-de-amor) (© [Open Knowledge Brasil](https://br.okfn.org) and, previously, © [Data Science Brigade](https://github.com/datasciencebr)).
