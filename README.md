@@ -2,7 +2,7 @@
 
 A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly acessible data.
 
-## How does it works
+## How does it work
 
 1. `PublicAdminSite` works as a clone of Django's native `AdminSite`, but it looks at the HTTP request and the URL to decide whether they should exist in a public and read-only dashboard.
 1. `PublicModelAdmin` work as a clone of Django's native `ModelAdmin`, but what it does is to stop actions that would create, edit or delete objects.
