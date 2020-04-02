@@ -12,7 +12,7 @@ class DummyUser(AnonymousUser):
         self.public_models = set(
             f"{public_app}.change_{public_model}"
             for public_app in self.public_apps
-            for public_model in self.public_models
+            for public_model in public_models
         )
         super().__init__(*args, **kwargs)
 
