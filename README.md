@@ -1,4 +1,4 @@
-# _Draft_ for Django Public Admin
+# Django Public Admin
 
 A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly acessible data.
 
@@ -8,15 +8,15 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 1. `PublicModelAdmin` work as a clone of Django's native `ModelAdmin`, but what it does is to stop actions that would create, edit or delete objects.
 1. `DummyUser` is just a an implementation detail, since Django requires an user to process the requests.
 
-## Instructions — _they do not work, but are helpful in the API-driven design mindset_
-
-### Install
+## Install
 
 > As this package is not finished nor published, this command does not work just yet. However, [Poetry](https://python-poetry.org/) should install it in the local _virtualenv_ one can access with `poetry shell`.
 
 ```console
 $ pip install django-public-admin
 ```
+
+## Usage
 
 ### Create your _Django Public Admin_ instance
 
