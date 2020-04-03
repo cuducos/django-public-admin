@@ -12,7 +12,7 @@ class DummyUser(AnonymousUser):
         self.public_models = set(
             f"{public_app}.change_{public_model}"
             for public_app in self.public_apps
-            for public_model in self.public_models
+            for public_model in public_models
         )
         super().__init__(*args, **kwargs)
 
@@ -27,7 +27,7 @@ class PublicAdminSite(AdminSite):
     def __init__(self, name="public_admin", public_apps=(), public_models=()):
         super().__init__(name=name)
         self._actions, self._global_actions = {}, {}
-        self.dummy_user = DummyUser(public_apps, public_models)
+        self.dummy_user = DummyUser(public_apps=public_apps, public_models=public_models)
 
     @staticmethod
     def valid_url(url):
