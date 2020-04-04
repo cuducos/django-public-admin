@@ -1,4 +1,5 @@
+*.egg-info/
 *.pyc
-__pycache__/
-django_public_admin.egg-info/
 .tox
+__pycache__/
+dist/
