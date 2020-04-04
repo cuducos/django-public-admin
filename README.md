@@ -1,6 +1,6 @@
 # Django Public Admin
 
-A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly acessible data.
+A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data.
 
 ## How does it work
 
@@ -71,6 +71,8 @@ We use `tox` to Run tests with Python 3.6, 3.7 and 3.8, and with Django 2 and 3.
 $ poetry install
 $ poetry run tox
 ```
+
+
 
 ## License & Credits
 
