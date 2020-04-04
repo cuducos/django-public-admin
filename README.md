@@ -23,7 +23,8 @@ $ pip install django-public-admin
 Just like one would create a regular `admin.py`, you can create a module using _Django Public Admin_'s `PublicAdminSite` and `PublicModelAdmin`:
 
 ```python
-from public_admin.sites import PublicAdminSite, PublicModelAdmin
+from public_admin.admin import PublicModelAdmin
+from public_admin.sites import PublicAdminSite, PublicApp
 
 from my_website.my_open_house.models import Beverage, Snack
 
@@ -36,10 +37,10 @@ class SnackModelAdmin(PublicModelAdmin):
     pass
 
 
+public_app = PublicApp("my_open_house", models=("beverage", "snack"))
 public_admin = PublicAdminSite(
     "dashboard",  # you name it as you wish
-    public_apps=("my_open_house",),  # all your apps that can be public accessible
-    public_models=("beverage", "snack")  # all your models from those apps that can be public accessible
+    public_app,  # this can be a single public app or a sequence of public apps
 )
 public_admin.register(Beverage, BeverageModelAdmin)
 public_admin.register(Sanck, SanckModelAdmin)

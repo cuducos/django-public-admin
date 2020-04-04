@@ -6,13 +6,19 @@ from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_protect
 
 
+class PublicApp:
+    def __init__(self, name, models):
+        self.name = name
+        self.permissions = tuple(f"{name}.view_{model}" for model in models)
+
+
 class DummyUser(AnonymousUser):
-    def __init__(self, *args, public_apps=(), public_models=(), **kwargs):
-        self.public_apps = set(public_apps)
-        self.public_models = set(
-            f"{public_app}.change_{public_model}"
-            for public_app in self.public_apps
-            for public_model in public_models
+    def __init__(self, public_apps, *args, **kwargs):
+        self.public_apps = set(app.name for app in public_apps)
+        self.permissions = set(
+            permission
+            for public_app in public_apps
+            for permission in public_app.permissions
         )
         super().__init__(*args, **kwargs)
 
@@ -20,16 +26,17 @@ class DummyUser(AnonymousUser):
         return app_label in self.public_apps
 
     def has_perm(self, permission, obj=None):
-        return permission in self.public_models
+        return permission in self.permissions
 
 
 class PublicAdminSite(AdminSite):
-    def __init__(self, name="public_admin", public_apps=(), public_models=()):
+    def __init__(self, name="public_admin", public_apps=()):
         super().__init__(name=name)
         self._actions, self._global_actions = {}, {}
-        self.dummy_user = DummyUser(
-            public_apps=public_apps, public_models=public_models
-        )
+
+        if isinstance(public_apps, PublicApp):
+            public_apps = (public_apps,)
+        self.dummy_user = DummyUser(public_apps)
 
     @staticmethod
     def valid_url(url):
