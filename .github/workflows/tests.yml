@@ -1,0 +1,24 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Install pyenv
+        uses: gabrielfalcao/pyenv-action@v5
+        with:
+          default: 3.8.2
+          versions: 3.8.2 3.7.7 3.6.10
+      - name: Install dependencies
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version: 3.8
+          poetry_version: 1.0.5
+          args: install
+      - name: Run tests
+        uses: abatilo/actions-poetry@v1.5.0
+        with:
+          python_version: 3.8
+          poetry_version: 1.0.5
+          args: run tox
