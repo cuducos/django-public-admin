@@ -1,4 +1,7 @@
+[![PyPI](https://img.shields.io/pypi/v/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-public-admin)](https://pypi.org/project/django-public-admin/)
+
 # Django Public Admin
+
 
 A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data.
 
@@ -9,8 +12,6 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 1. `DummyUser` is just a an implementation detail, since Django requires an user to process the requests.
 
 ## Install
-
-> As this package is not finished nor published, this command does not work just yet. However, [Poetry](https://python-poetry.org/) should install it in the local _virtualenv_ one can access with `poetry shell`.
 
 ```console
 $ pip install django-public-admin
