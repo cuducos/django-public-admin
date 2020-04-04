@@ -18,7 +18,7 @@ $ pip install django-public-admin
 
 ## Usage
 
-### Create your _Django Public Admin_ instance
+### 1. Create your _Django Public Admin_ instance
 
 Just like one would create a regular `admin.py`, you can create a module using _Django Public Admin_'s `PublicAdminSite` and `PublicModelAdmin`:
 
@@ -45,7 +45,7 @@ public_admin.register(Beverage, BeverageModelAdmin)
 public_admin.register(Sanck, SanckModelAdmin)
 ```
 
-### Add your _Django Public Admin_ URLs
+### 2. Add your _Django Public Admin_ URLs
 
 In your `urls.py`, import the `public_html` (or whatever you've named it earlier) in your URLs file and create the endpoints:
 
@@ -61,18 +61,28 @@ url = [
 ]
 ```
 
+### 3. Templates
+
+_Django Public Admin_ comes with a template that hides from the UI elements related to user, login and logout. To use it, add `public_admin` to your `INSTALLED_APPS` **before** `django.contrib.admin`:
+
+```python
+INSTALLED_APPS = [
+    "public_admin",
+    "django.contrib.admin",
+    # ...
+]
+```
+
+If you decide not to use it, you have to create your own `templates/base.html` to avoid errors when rendering the template. Django will fail, for example, in rendering URLs that do not exist, which would be the case for login and logout.
+
 ## Contributing
 
 We use `tox` to Run tests with Python 3.6, 3.7 and 3.8, and with Django 2 and 3. Also we use Black and `flake8`:
-
-
 
 ```console
 $ poetry install
 $ poetry run tox
 ```
-
-
 
 ## License & Credits
 
