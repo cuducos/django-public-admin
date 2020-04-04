@@ -61,6 +61,17 @@ url = [
 ]
 ```
 
+## Contributing
+
+We use `tox` to Run tests with Python 3.6, 3.7 and 3.8, and with Django 2 and 3. Also we use Black and `flake8`:
+
+
+
+```console
+$ poetry install
+$ poetry run tox
+```
+
 ## License & Credits
 
 This package is licensed under [MIT license](/LICENSE) and acknowledge [Serenata de Amor](https://github.com/okfn-brasil/serenata-de-amor) (© [Open Knowledge Brasil](https://br.okfn.org) and, previously, © [Data Science Brigade](https://github.com/datasciencebr)).
