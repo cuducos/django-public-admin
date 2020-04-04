@@ -3,3 +3,5 @@
 .tox
 __pycache__/
 dist/
+docs/_build/
+docs/json/

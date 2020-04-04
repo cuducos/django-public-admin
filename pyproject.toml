@@ -30,10 +30,13 @@ django = "^2.0.0"
 [tool.poetry.dev-dependencies]
 Black = "^19.10b0"
 flake8 = "^3.7.9"
+pip = "^20.0.2"
 pytest-black = "^0.3.8"
-pytest-django = "^3.8.0"
 pytest-flake8 = "^1.0.4"
 pytest-mock = "^2.0.0"
+readthedocs-sphinx-ext = "^1.0.1"
+sphinx = "^2.4.4"
+sphinx_rtd_theme = "^0.4.3"
 tox = "^3.14.6"
 
 [build-system]

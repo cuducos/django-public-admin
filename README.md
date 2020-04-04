@@ -1,81 +1,9 @@
-[![PyPI](https://img.shields.io/pypi/v/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-public-admin)](https://pypi.org/project/django-public-admin/)
+[![PyPI](https://img.shields.io/pypi/v/django-public-admin)](https://pypi.org/project/django-public-admin/) [![Documentation Status](https://readthedocs.org/projects/django-public-admin/badge/?version=latest)](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-public-admin)](https://pypi.org/project/django-public-admin/)
 
 # Django Public Admin
 
 
-A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data.
-
-## How does it work
-
-1. `PublicAdminSite` works as a clone of Django's native `AdminSite`, but it looks at the HTTP request and the URL to decide whether they should exist in a public and read-only dashboard.
-1. `PublicModelAdmin` work as a clone of Django's native `ModelAdmin`, but what it does is to stop actions that would create, edit or delete objects.
-1. `DummyUser` is just a an implementation detail, since Django requires an user to process the requests.
-
-## Install
-
-```console
-$ pip install django-public-admin
-```
-
-## Usage
-
-### 1. Create your _Django Public Admin_ instance
-
-Just like one would create a regular `admin.py`, you can create a module using _Django Public Admin_'s `PublicAdminSite` and `PublicModelAdmin`:
-
-```python
-from public_admin.admin import PublicModelAdmin
-from public_admin.sites import PublicAdminSite, PublicApp
-
-from my_website.my_open_house.models import Beverage, Snack
-
-
-class BeverageModelAdmin(PublicModelAdmin):
-    pass
-
-
-class SnackModelAdmin(PublicModelAdmin):
-    pass
-
-
-public_app = PublicApp("my_open_house", models=("beverage", "snack"))
-public_admin = PublicAdminSite(
-    "dashboard",  # you name it as you wish
-    public_app,  # this can be a single public app or a sequence of public apps
-)
-public_admin.register(Beverage, BeverageModelAdmin)
-public_admin.register(Sanck, SanckModelAdmin)
-```
-
-### 2. Add your _Django Public Admin_ URLs
-
-In your `urls.py`, import the `public_html` (or whatever you've named it earlier) in your URLs file and create the endpoints:
-
-```python
-from django.urls import path
-
-from my_website.my_open_house.admin import public_admin
-
-
-url = [
-    # …
-    path("dashboard/", public_admin.urls)
-]
-```
-
-### 3. Templates
-
-_Django Public Admin_ comes with a template that hides from the UI elements related to user, login and logout. To use it, add `public_admin` to your `INSTALLED_APPS` **before** `django.contrib.admin`:
-
-```python
-INSTALLED_APPS = [
-    "public_admin",
-    "django.contrib.admin",
-    # ...
-]
-```
-
-If you decide not to use it, you have to create your own `templates/base.html` to avoid errors when rendering the template. Django will fail, for example, in rendering URLs that do not exist, which would be the case for login and logout.
+A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data. Check the [documentation](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) for more information on how to use it.
 
 ## Contributing
 
@@ -85,6 +13,16 @@ We use `tox` to Run tests with Python 3.6, 3.7 and 3.8, and with Django 2 and 3.
 $ poetry install
 $ poetry run tox
 ```
+
+### Docs
+
+To build the docs we use [Sphinx](https://www.sphinx-doc.org/en/):
+
+```
+$ poetry run sphinx-build docs docs/_build/
+```
+
+Them just jump to `docs/_build/index.html`.
 
 ## License & Credits
 
