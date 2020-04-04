@@ -27,7 +27,9 @@ class PublicAdminSite(AdminSite):
     def __init__(self, name="public_admin", public_apps=(), public_models=()):
         super().__init__(name=name)
         self._actions, self._global_actions = {}, {}
-        self.dummy_user = DummyUser(public_apps=public_apps, public_models=public_models)
+        self.dummy_user = DummyUser(
+            public_apps=public_apps, public_models=public_models
+        )
 
     @staticmethod
     def valid_url(url):
