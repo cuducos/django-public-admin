@@ -9,12 +9,15 @@ repository = "https://github.com/cuducos/django-public-admin"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Developers",
-  "Natural Language :: English",
   "Topic :: Software Development",
   "Framework :: Django",
-  "Python :: 3.6",
-  "Python :: 3.7",
-  "Python :: 3.8 "
+  "Framework :: Django :: 2.0",
+  "Framework :: Django :: 2.1",
+  "Framework :: Django :: 2.2",
+  "Framework :: Django :: 3.0",
+  "Programming Language :: Python :: 3.6",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8"
 ]
 packages = [
     {include = "public_admin"}
