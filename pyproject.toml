@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-public-admin"
-version = "0.0.2"
+version = "0.0.3"
 description = "A public read-only version of the Django Admin"
 authors = ["Eduardo Cuducos <cuducos@users.noreply.github.com>"]
 license = "MIT"
