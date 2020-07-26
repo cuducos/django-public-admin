@@ -25,7 +25,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.6"
-django = "^2.0.0"
+django = ">=2"
 
 [tool.poetry.dev-dependencies]
 Black = "^19.10b0"
