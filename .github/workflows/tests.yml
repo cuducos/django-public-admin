@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-        poetry install tox-gh-actions
+        poetry add tox-gh-actions
     - name: Black
       run: poetry run black .
     - name: Tox
