@@ -17,6 +17,6 @@ jobs:
     - name: Install dependencies
       run: |
         poetry install
-        poetry add tox-gh-actions
+        poetry run pip install tox-gh-actions
     - name: Tests
       run: poetry run tox
