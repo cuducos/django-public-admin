@@ -15,11 +15,13 @@ jobs:
     - name: Install Poetry
       run: pip install poetry
     - name: Install dependencies
-      run: poetry install
+      run: |
+        poetry install
+        poetry install tox-gh-actions
     - name: Black
       run: poetry run black .
     - name: Tox
-      run: python -m tox
+      run: poetry run tox
     #- name: Tox 3.7
     #  if: ${{ matrix.python-version  == '3.7.8' }}
     #  run: poetry run tox -e 'py37-django{2,3}'
