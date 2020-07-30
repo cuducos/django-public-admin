@@ -18,7 +18,5 @@ jobs:
       run: |
         poetry install
         poetry add tox-gh-actions
-    - name: Lint
-      run: poetry run black --check .
     - name: Tests
       run: poetry run tox
