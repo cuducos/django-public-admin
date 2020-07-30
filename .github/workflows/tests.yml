@@ -18,12 +18,11 @@ jobs:
       run: poetry install
     - name: Black
       run: poetry run black .
-    - name: Tox 3.8
-      if: ${{ matrix.python-version  == '3.8.3' }}
-      run: poetry run tox -e 'py38-django{2,3}'
-    - name: Tox 3.7
-      if: ${{ matrix.python-version  == '3.7.8' }}
-      run: poetry run tox -e 'py37-django{2,3}'
-    - name: Tox 3.6
-      if: ${{ matrix.python-version  == '3.6.11' }}
-      run: poetry run tox -e 'py36-django{2,3}'
+    - name: Tox
+      run: python -m tox
+    #- name: Tox 3.7
+    #  if: ${{ matrix.python-version  == '3.7.8' }}
+    #  run: poetry run tox -e 'py37-django{2,3}'
+    #- name: Tox 3.6
+    #  if: ${{ matrix.python-version  == '3.6.11' }}
+    #  run: poetry run tox -e 'py36-django{2,3}'
