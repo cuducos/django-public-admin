@@ -25,7 +25,7 @@ Just like one would create a regular ``admin.py``, you can create a module `publ
     public_app = PublicApp("my_open_house", models=("beverage", "snack"))
     public_admin = PublicAdminSite("dashboard", public_app)
 
-The first agrgument is the name of this site in Django, and the second argument can be a single instance of `public_admin.sites.PublicApp` or a sequence of them.
+The first argument is the name of this site in Django, and the second argument can be a single instance of `public_admin.sites.PublicApp` or a sequence of them.
 
 Create and register your ``PublicModelAdmin``
 ---------------------------------------------
