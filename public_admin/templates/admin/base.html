@@ -1,4 +1,4 @@
 {% extends "admin/base.html" %}
 
-{% block welcome-msg %}{% endblock %}
-{% block userlinks %}{% endblock %}
+{% block welcome-msg %}% if not request.user.is_anonymous %}{{ block.super }}{% endif %}{% endblock %}
+{% block userlinks %}% if not request.user.is_anonymous %}{{ block.super }}{% endif %}{% endblock %}
