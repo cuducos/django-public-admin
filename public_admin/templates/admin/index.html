@@ -1,0 +1,4 @@
+{% extends "admin/index.html" %}
+{% load i18n admin_urls %}
+
+{% block sidebar %}{% if not request.user.is_anonymous %}{{ block.super }}{% endif %}{% endblock %}
