@@ -1,5 +1,10 @@
 # Changelog
 
+**0.0.4** (Oct 06, 2020)
+  * Example application added to the repository
+  * Remove “Recent actions” from the UI
+  * Template compatible with native Django Admin instance
+
 **0.0.3** (Jul 26, 2020)
   * Fixes compatibility with Django 3 in pyproject.toml
 
