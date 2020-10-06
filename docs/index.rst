@@ -22,6 +22,7 @@ Install
    :caption: Table of contents:
 
    usage
+   example
    api
 
 References

@@ -4,13 +4,13 @@ Usage
 Declare which apps and models you want to make public
 -----------------------------------------------------
 
-Let's say you have a Django app called ``my_open_house`` with models ``beverage`` and ``snack`` that you want their data to de public. Use `public_admin.sites.PublicApp` to declare that:
+Let's say you have a Django app called ``my_open_house`` with models ``Beverage`` and ``Snack`` that you want their data to de public. Use ``public_admin.sites.PublicApp`` to declare that:
 
 ::
 
     from public_admin.sites import PublicApp
     
-    public_app = PublicApp("my_open_house", models=("beverage", "snack"))
+    public_app = PublicApp("my_open_house", models=("Beverage", "Snack"))
 
 Create your *Django Public Admin* instance
 -------------------------------------------
@@ -46,7 +46,7 @@ Create and register your ``PublicModelAdmin``
 
 
     public_admin.register(Beverage, BeverageModelAdmin)
-    public_admin.register(Sanck, SanckModelAdmin)
+    public_admin.register(Snack, SnackModelAdmin)
 
 Add your *Django Public Admin* URLs
 -----------------------------------
@@ -60,7 +60,7 @@ In your ``urls.py``, import the `public_admin` (or whatever you've named it earl
     from my_website.my_open_house.admin import public_admin
 
 
-    url = [
+    urlpatterns = [
         # …
         path("dashboard/", public_admin.urls)
     ]
@@ -68,7 +68,7 @@ In your ``urls.py``, import the `public_admin` (or whatever you've named it earl
 Templates
 ---------
 
-*Django Public Admin* comes with a template that hides from the UI elements related to user, login and logout. To use it, add ``"public_admin"`` to your ``INSTALLED_APPS`` **before** ``django.contrib.admin``:
+*Django Public Admin* comes with a template that hides from the UI elements related to non-logged-in users (elements such as login and logout links, recent actions panel, etc.). These templates are designed in a way to preserve the behavior of a regular instance of Django's native admin for logged-in users. To use it, add ``"public_admin"`` to your ``INSTALLED_APPS`` **before** ``django.contrib.admin``:
 
 ::
 
