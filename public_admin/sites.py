@@ -104,5 +104,6 @@ class PublicAdminSite(AdminSite):
         permission = f"{model_app}.view_{model_name}"
 
         if not self.dummy_user.has_perm(permission):
-            raise ImproperlyRegistered(f"This model {model_name} isn't defined among the PublicApp's models")
+            raise ImproperlyRegistered(f"This model {model_name} isn't defined"
+                                       f" among the PublicApp's models")
         return super(PublicAdminSite, self).register(model, admin_class)
