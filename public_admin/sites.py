@@ -43,6 +43,7 @@ class DummyUser(AnonymousUser):
         `public_admin.sites.PublicApp`."""
         return permission in self.permissions
 
+
 class PublicAdminSite(AdminSite):
     """Mimics the Django's native `AdminSite` but removing URLs and permissions
     that does not match the idea of a public admin. `name` is the name of this
