@@ -5,6 +5,10 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_protect
 
+from public_admin.exceptions import ImproperlyRegistered
+
+import logging
+
 
 class PublicApp:
     """Holds the permission strings for each model in a Django app. `name`
@@ -40,7 +44,6 @@ class DummyUser(AnonymousUser):
         """Only grant permission if the app and model were passed in a
         `public_admin.sites.PublicApp`."""
         return permission in self.permissions
-
 
 class PublicAdminSite(AdminSite):
     """Mimics the Django's native `AdminSite` but removing URLs and permissions
@@ -94,3 +97,13 @@ class PublicAdminSite(AdminSite):
             inner = csrf_protect(inner)
 
         return update_wrapper(inner, view)
+
+    def register(self, model, admin_class=None, **options):
+        """Verify if the model that is been requested to be registered,
+         is allowed in this public admin site"""
+        model_app, model_name = model._meta.label.split(".")
+        permission = f"{model_app}.view_{model_name}"
+
+        if not self.dummy_user.has_perm(permission):
+            raise ImproperlyRegistered(f"This model {model_name} isn't defined among the PublicApp's models")
+        return super(PublicAdminSite, self).register(model, admin_class)
