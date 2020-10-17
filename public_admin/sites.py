@@ -7,8 +7,6 @@ from django.views.decorators.csrf import csrf_protect
 
 from public_admin.exceptions import ImproperlyRegistered
 
-import logging
-
 
 class PublicApp:
     """Holds the permission strings for each model in a Django app. `name`
