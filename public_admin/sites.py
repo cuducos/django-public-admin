@@ -99,11 +99,13 @@ class PublicAdminSite(AdminSite):
 
     def register(self, model, admin_class=None, **options):
         """Verify if the model that is been requested to be registered,
-         is allowed in this public admin site"""
+        is allowed in this public admin site"""
         model_app, model_name = model._meta.label.split(".")
         permission = f"{model_app}.view_{model_name}"
 
         if not self.dummy_user.has_perm(permission):
-            raise ImproperlyRegistered(f"This model {model_name} isn't defined"
-                                       f" among the PublicApp's models")
+            raise ImproperlyRegistered(
+                f"This model {model_name} isn't defined"
+                f" among the PublicApp's models"
+            )
         return super(PublicAdminSite, self).register(model, admin_class)
