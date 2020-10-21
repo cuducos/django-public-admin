@@ -98,8 +98,8 @@ class PublicAdminSite(AdminSite):
         return update_wrapper(inner, view)
 
     def register(self, model, admin_class=None, **options):
-        """Verify if the model that is been requested to be registered,
-        is allowed in this public admin site"""
+        """Verifies whether the model about to be registered is allowed in this
+        public admin site"""
         model_app, model_name = model._meta.label.split(".")
         permission = f"{model_app}.view_{model_name}"
 
