@@ -101,7 +101,6 @@ class PublicAdminSite(AdminSite):
         """Verifies whether the model about to be registered is allowed in this
         public admin site"""
         permission = f"{model._meta.app_label}.view_{model._meta.model_name}"
-
         if not self.dummy_user.has_perm(permission):
             msg = f"{model._meta.object_name} is not listed in this public app."
             raise UnauthorizedModelError(msg)
