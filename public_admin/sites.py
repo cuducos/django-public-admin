@@ -100,7 +100,8 @@ class PublicAdminSite(AdminSite):
     def register(self, model, admin_class=None, **options):
         """Verifies whether the model about to be registered is allowed in this
         public admin site"""
-        permission = f"{model._meta.app_label}.view_{model._meta.object_name}"
+        permission = f"{model._meta.app_label}.view_{model._meta.model_name}"
+        print(permission)
 
         if not self.dummy_user.has_perm(permission):
             msg = f"{model._meta.object_name} is not listed in this public app."

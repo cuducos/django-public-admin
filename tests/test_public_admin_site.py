@@ -8,7 +8,7 @@ from django.db import models
 
 
 class Beverage(models.Model):
-    def Meta(self):
+    def _meta(self):
         self.app_label = "my_open_house"
 
 
