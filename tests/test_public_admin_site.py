@@ -1,5 +1,19 @@
+import pytest
+
+from public_admin.exceptions import UnauthorizedModelError
 from public_admin.sites import PublicAdminSite
 from public_admin.sites import PublicApp
+
+from django.db import models
+
+
+class Beverage(models.Model):
+    def Meta(self):
+        self.app_label = "my_open_house"
+
+
+class Music(models.Model):
+    pass
 
 
 PUBLIC_APPS = (
@@ -45,3 +59,14 @@ def test_has_permission_post(mocker):
     request = mocker.MagicMock()
     request.method = "POST"
     assert not public_admin.has_permission(request)
+
+
+def test_authorized_model_can_be_registered():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    public_admin.register(Beverage)
+
+
+def test_non_authorized_model_cannot_be_registered():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    with pytest.raises(UnauthorizedModelError):
+        public_admin.register(Music)
