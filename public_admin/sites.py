@@ -5,7 +5,7 @@ from django.contrib.auth.models import AnonymousUser
 from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_protect
 
-from public_admin.exceptions import ImproperlyRegistered
+from public_admin.exceptions import UnauthorizedModelError
 
 
 class PublicApp:
@@ -27,7 +27,7 @@ class DummyUser(AnonymousUser):
     def __init__(self, public_apps, *args, **kwargs):
         self.public_apps = set(app.name for app in public_apps)
         self.permissions = set(
-            permission
+            permission.lower()
             for public_app in public_apps
             for permission in public_app.permissions
         )
@@ -41,7 +41,7 @@ class DummyUser(AnonymousUser):
     def has_perm(self, permission, obj=None):
         """Only grant permission if the app and model were passed in a
         `public_admin.sites.PublicApp`."""
-        return permission in self.permissions
+        return permission.lower() in self.permissions
 
 
 class PublicAdminSite(AdminSite):
@@ -100,12 +100,9 @@ class PublicAdminSite(AdminSite):
     def register(self, model, admin_class=None, **options):
         """Verifies whether the model about to be registered is allowed in this
         public admin site"""
-        model_app, model_name = model._meta.label.split(".")
-        permission = f"{model_app}.view_{model_name}"
+        permission = f"{model._meta.app_label}.view_{model._meta.object_name}"
 
         if not self.dummy_user.has_perm(permission):
-            raise ImproperlyRegistered(
-                f"This model {model_name} isn't defined"
-                f" among the PublicApp's models"
-            )
+            msg = f"{model._meta.object_name} is not listed in this public app."
+            raise UnauthorizedModelError(msg)
         return super(PublicAdminSite, self).register(model, admin_class)
