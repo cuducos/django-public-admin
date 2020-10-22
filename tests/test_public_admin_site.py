@@ -8,12 +8,13 @@ from django.db import models
 
 
 class Beverage(models.Model):
-    def _meta(self):
-        self.app_label = "my_open_house"
+    class Meta:
+        app_label = "my_open_house"
 
 
 class Music(models.Model):
-    pass
+    class Meta:
+        app_label = "my_open_house"
 
 
 PUBLIC_APPS = (
