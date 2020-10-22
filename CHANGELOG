@@ -1,5 +1,9 @@
 # Changelog
 
+**0.0.5** (Oct 22, 2020)
+  * Python 3.9 support
+  * Fixed bug that would allow models not declared in Public App to be in the public admin
+
 **0.0.4** (Oct 06, 2020)
   * Example application added to the repository
   * Remove “Recent actions” from the UI
