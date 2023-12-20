@@ -1,10 +1,8 @@
 import pytest
+from django.db import models
 
 from public_admin.exceptions import UnauthorizedModelError
-from public_admin.sites import PublicAdminSite
-from public_admin.sites import PublicApp
-
-from django.db import models
+from public_admin.sites import PublicAdminSite, PublicApp
 
 
 class Beverage(models.Model):

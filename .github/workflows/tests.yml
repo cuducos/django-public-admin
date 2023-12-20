@@ -6,13 +6,15 @@ jobs:
     strategy:
       matrix:
         python-version:
+          - 3.12
+          - 3.11
+          - "3.10"
           - 3.9
           - 3.8
-          - 3.7
-          - 3.6
         django-version:
           - 3
-          - 2
+          - 4
+          - 5
     name: Python ${{ matrix.python-version }} & Django ${{ matrix.django-version }}
     steps:
     - uses: actions/checkout@v2

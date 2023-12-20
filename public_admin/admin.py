@@ -1,4 +1,5 @@
 from django.contrib.admin import ModelAdmin
+
 from public_admin.sites import PublicAdminSite
 
 

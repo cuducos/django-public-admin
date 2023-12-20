@@ -1,6 +1,5 @@
 from public_admin.sites import DummyUser, PublicApp
 
-
 PUBLIC_APPS = (
     PublicApp("my_open_house", ("beverage", "snack")),
     PublicApp("library", ("book", "journal")),
