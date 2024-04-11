@@ -68,7 +68,7 @@ In your ``urls.py``, import the `public_admin` (or whatever you've named it earl
 Templates
 ---------
 
-*Django Public Admin* comes with a template that hides from the UI elements related to non-logged-in users (elements such as login and logout links, recent actions panel, etc.). These templates are designed in a way to preserve the behavior of a regular instance of Django's native admin for logged-in users. To use it, add ``"public_admin"`` to your ``INSTALLED_APPS`` **before** ``django.contrib.admin``:
+*Django Public Admin* comes with a template that hides from the UI elements related to non-logged-in users (elements such as login and logout links, recent actions panel, etc.). These templates are designed in a way to preserve the behavior of a regular instance of Django's native admin for logged-in users. To use it, add ``"public_admin"`` to your ``INSTALLED_APPS`` **before** ``"django.contrib.admin"``:
 
 ::
 
