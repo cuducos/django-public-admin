@@ -5,7 +5,6 @@ from django.urls import path
 
 from example.my_open_house.public_admin import public_admin
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("dashboard/", public_admin.urls),

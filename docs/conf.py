@@ -1,11 +1,11 @@
 import os
 import sys
 from pathlib import Path
-from pkg_resources import get_distribution
 from typing import List
 
 import django
 from django.conf import settings
+from pkg_resources import get_distribution
 
 # add path to sys.path (this might be different in your project)
 sys.path.insert(0, os.path.abspath(".."))

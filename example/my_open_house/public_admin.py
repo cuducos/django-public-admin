@@ -1,7 +1,6 @@
+from example.my_open_house.models import Beverage, Snack
 from public_admin.admin import PublicModelAdmin
 from public_admin.sites import PublicAdminSite, PublicApp
-
-from example.my_open_house.models import Beverage, Snack
 
 
 class BeverageModelAdmin(PublicModelAdmin):
