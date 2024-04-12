@@ -1,4 +1,4 @@
-[![PyPI](https://img.shields.io/pypi/v/django-public-admin)](https://pypi.org/project/django-public-admin/) [![Documentation Status](https://readthedocs.org/projects/django-public-admin/badge/?version=latest)](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-public-admin)](https://pypi.org/project/django-public-admin/)
+[![PyPI](https://img.shields.io/pypi/v/django-public-admin)](https://pypi.org/project/django-public-admin/) [![Tests](https://img.shields.io/github/actions/workflow/status/cuducos/django-public-admin/tests.yaml)](https://github.com/cuducos/django-public-admin/actions/workflows/tests.yaml) [![Documentation Status](https://readthedocs.org/projects/django-public-admin/badge/?version=latest)](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-public-admin)](https://pypi.org/project/django-public-admin/) [![PyPI - Django Version](https://img.shields.io/pypi/djversions/django-public-admin)](https://pypi.org/project/django-public-admin/)
 
 # Django Public Admin
 
@@ -19,6 +19,7 @@ $ poetry run tox
 To build the docs we use [Sphinx](https://www.sphinx-doc.org/en/):
 
 ```
+$ poetry run pip install docs/requirements.txt
 $ poetry run sphinx-build docs docs/_build/
 ```
 

@@ -1,5 +1,4 @@
 .
-pip>=20.0.0
-readthedocs-sphinx-ext
-sphinx
-sphinx_rtd_theme
+readthedocs-sphinx-ext==2.2.5
+Sphinx==7.2.6
+sphinx_rtd_theme==2.0.0

@@ -29,9 +29,6 @@ django = ">=3.2"
 
 [tool.poetry.dev-dependencies]
 pytest-ruff = "^0.3.1"
-readthedocs-sphinx-ext = "^2.2.5"
-sphinx = "^7.2.6"
-sphinx-rtd-theme = "^2.0.0"
 tox = "^4.14.2"
 
 [tool.pytest.ini_options]
