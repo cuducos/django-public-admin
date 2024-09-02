@@ -7,7 +7,7 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 
 ## Contributing
 
-We use `tox` to Run tests with Python 3.6, 3.7 and 3.8, and with Django 2 and 3. Also we use Black and `flake8`:
+We use `tox` to Run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters):
 
 ```console
 $ poetry install

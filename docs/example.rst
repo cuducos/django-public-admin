@@ -7,7 +7,7 @@ Requirements
 ------------
 
 * Git
-* Python 3.6 or newer with `Poetry <https://python-poetry.org>`_ (or other `PEP 517 <https://www.python.org/dev/peps/pep-0517/>`_ `pyproject.toml` compatible tool)
+* Python 3.9 or newer with `Poetry <https://python-poetry.org>`_
 
 Running the example
 -------------------
