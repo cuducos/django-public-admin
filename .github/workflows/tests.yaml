@@ -13,14 +13,7 @@ jobs:
         django-version:
           - "5.0"
           - "4.2"
-          - "3.2"
         exclude:
-          - django-version: "3.2"
-            python-version: "3.10"
-          - django-version: "3.2"
-            python-version: "3.11"
-          - django-version: "3.2"
-            python-version: "3.12"
           - django-version: "4.2"
             python-version: "3.11"
           - django-version: "4.2"

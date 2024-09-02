@@ -11,7 +11,6 @@ classifiers = [
   "Intended Audience :: Developers",
   "Topic :: Software Development",
   "Framework :: Django",
-  "Framework :: Django :: 3.2",
   "Framework :: Django :: 4.2",
   "Framework :: Django :: 5.0",
   "Programming Language :: Python :: 3.9",
@@ -25,7 +24,7 @@ packages = [
 
 [tool.poetry.dependencies]
 python = "^3.9"
-django = ">=3.2"
+django = ">=4.2"
 
 [tool.poetry.group.dev.dependencies]
 pytest-ruff = "^0.3.1"
