@@ -4,7 +4,7 @@ Usage
 Declare which apps and models you want to make public
 -----------------------------------------------------
 
-Let's say you have a Django app called ``my_open_house`` with models ``Beverage`` and ``Snack`` that you want their data to de public. Use ``public_admin.sites.PublicApp`` to declare that:
+Let's say you have a Django app called ``my_open_house`` with models ``Beverage`` and ``Snack`` that you want their data to the public. Use ``public_admin.sites.PublicApp`` to declare that:
 
 ::
 
