@@ -81,6 +81,7 @@ DATABASES = {
         "NAME": TMP_DIR / "db.sqlite3",
     }
 }
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 # Password validation
