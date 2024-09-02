@@ -6,6 +6,7 @@ jobs:
     strategy:
       matrix:
         python-version:
+          - "3.13-dev"
           - "3.12"
           - "3.11"
           - "3.10"
@@ -14,10 +15,6 @@ jobs:
           - "5.0"
           - "4.2"
         exclude:
-          - django-version: "4.2"
-            python-version: "3.11"
-          - django-version: "4.2"
-            python-version: "3.12"
           - django-version: "5.0"
             python-version: "3.9"
     name: Python ${{ matrix.python-version }} & Django ${{ matrix.django-version }}
