@@ -7,11 +7,10 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 
 ## Contributing
 
-We use `tox` to Run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters):
+We use [`uv`](https://docs.astral.sh/uv/) packaghe manager and `tox` to run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters):
 
 ```console
-$ poetry install
-$ poetry run tox
+$ uv run tox
 ```
 
 ### Docs
@@ -19,8 +18,8 @@ $ poetry run tox
 To build the docs we use [Sphinx](https://www.sphinx-doc.org/en/):
 
 ```
-$ poetry run pip install docs/requirements.txt
-$ poetry run sphinx-build docs docs/_build/
+$ uv run pip install -r docs/requirements.txt
+$ uv run sphinx-build docs docs/_build/
 ```
 
 Them just jump to `docs/_build/index.html`.

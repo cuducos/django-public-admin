@@ -7,25 +7,24 @@ Requirements
 ------------
 
 * Git
-* Python 3.9 or newer with `Poetry <https://python-poetry.org>`_
+* `uv <>https://docs.astral.sh/uv/`_
 
 Running the example
 -------------------
 
-First, clone the repository and install the dependencies:
+First, clone the repository:
 
 ::
 
     git clone https://github.com/cuducos/django-public-admin.git
-    poetry install
 
 Then start the application:
 
 ::
 
-    poetry run python example/manage.py runexample
+    uv run python example/manage.py runexample
 
-The ``runexample`` command is a wrapper around Django's native ``runserver``. It creates a temporary SQLite database, run migrations, creates a superuser, and collects static files *automagically* before spinning up the development server. If you are having trouble with this command, you can try to delete all these temporary files with ``poetry run python manage.py cleanexample``.
+The ``runexample`` command is a wrapper around Django's native ``runserver``. It creates a temporary SQLite database, run migrations, creates a superuser, and collects static files *automagically* before spinning up the development server. If you are having trouble with this command, you can try to delete all these temporary files with ``uv run python manage.py cleanexample``.
 
 Once the application is up and running, you can:
 
