@@ -4,9 +4,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - "3.13-dev"
+          - "3.13"
           - "3.12"
           - "3.11"
           - "3.10"
@@ -23,5 +24,5 @@ jobs:
     - uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v6
     - run: uv run tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}
