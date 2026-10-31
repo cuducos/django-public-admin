@@ -4,24 +4,21 @@ jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
         python-version:
-          - "3.13-dev"
+          - "3.13"
           - "3.12"
           - "3.11"
           - "3.10"
-          - "3.9"
         django-version:
           - "5.0"
           - "4.2"
-        exclude:
-          - django-version: "5.0"
-            python-version: "3.9"
     name: Python ${{ matrix.python-version }} & Django ${{ matrix.django-version }}
     steps:
-    - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    - uses: actions/checkout@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
-    - uses: astral-sh/setup-uv@v2
+    - uses: astral-sh/setup-uv@v6
     - run: uv run tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}
