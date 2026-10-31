@@ -1,11 +1,11 @@
 import os
 import sys
+from importlib import metadata
 from pathlib import Path
 from typing import List
 
 import django
 from django.conf import settings
-from pkg_resources import get_distribution
 
 # add path to sys.path (this might be different in your project)
 sys.path.insert(0, os.path.abspath(".."))
@@ -46,7 +46,7 @@ copyright = "2020, Eduardo Cuducos"
 author = "Eduardo Cuducos"
 
 # The full version, including alpha/beta/rc tags
-release = get_distribution("django-public-admin").version
+release = metadata.version("django-public-admin")
 
 
 # -- General configuration ---------------------------------------------------
