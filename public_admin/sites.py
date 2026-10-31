@@ -79,7 +79,14 @@ class PublicAdminSite(AdminSite):
         return list(urls), "admin", self.name
 
     def has_permission(self, request):
-        """Blocks all non-GET requests."""
+        """Blocks all non-GET requests, except POST requests to export views
+        (e.g. Django import / export's export form, which only reads data).
+        Also blocks import views altogether."""
+        url_name = getattr(request.resolver_match, "url_name", None) or ""
+        if url_name.endswith("_import"):
+            return False
+        if request.method == "POST":
+            return url_name.endswith("_export")
         return request.method == "GET"
 
     def admin_view(self, view, cacheable=False):
