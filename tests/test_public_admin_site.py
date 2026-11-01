@@ -2,7 +2,9 @@ from unittest.mock import Mock, patch
 
 import pytest
 from django.db import models
+from import_export.admin import ImportExportMixin
 
+from public_admin.admin import PublicModelAdmin
 from public_admin.exceptions import UnauthorizedModelError
 from public_admin.sites import PublicAdminSite, PublicApp
 
@@ -52,6 +54,7 @@ def test_has_permission_get():
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     request = Mock()
     request.method = "GET"
+    request.resolver_match.url_name = "my_open_house_beverage_changelist"
     assert public_admin.has_permission(request)
 
 
@@ -59,6 +62,50 @@ def test_has_permission_post():
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     request = Mock()
     request.method = "POST"
+    request.resolver_match.url_name = "my_open_house_beverage_changelist"
+    assert not public_admin.has_permission(request)
+
+
+def test_has_permission_without_resolver_match():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    request = Mock()
+    request.resolver_match = None
+    request.method = "GET"
+    assert public_admin.has_permission(request)
+    request.method = "POST"
+    assert not public_admin.has_permission(request)
+
+
+class BeverageAdmin(ImportExportMixin, PublicModelAdmin):
+    pass
+
+
+def test_has_permission_post_to_export():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    public_admin.register(Beverage, BeverageAdmin)
+    request = Mock()
+    request.method = "POST"
+    request.resolver_match.url_name = "my_open_house_beverage_export"
+    assert public_admin.has_permission(request)
+
+
+def test_has_permission_post_to_export_not_registered():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    public_admin.register(Beverage, PublicModelAdmin)
+    request = Mock()
+    request.method = "POST"
+    request.resolver_match.url_name = "my_open_house_beverage_export"
+    assert not public_admin.has_permission(request)
+
+
+@pytest.mark.parametrize("method", ("GET", "POST"))
+@pytest.mark.parametrize("view", ("import", "process_import"))
+def test_has_permission_import(method, view):
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    public_admin.register(Beverage, BeverageAdmin)
+    request = Mock()
+    request.method = method
+    request.resolver_match.url_name = f"my_open_house_beverage_{view}"
     assert not public_admin.has_permission(request)
 
 

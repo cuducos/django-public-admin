@@ -82,3 +82,23 @@ To use it, add ``"public_admin"`` to your ``INSTALLED_APPS`` **before** ``"djang
 
 **If you decide not to use this template**, you have to create your own ``templates/admin/base.html`` file to avoid errors when rendering the template. Django will fail, for example, in rendering URLs that do not exist, which would be the case for login and logout.
 
+
+Django import / export
+----------------------
+
+*Django Public Admin* works with `Django import / export <https://django-import-export.readthedocs.io/>`_ to let visitors download the public data. Add the ``ExportMixin`` **before** ``PublicModelAdmin``:
+
+::
+
+    from import_export.admin import ExportMixin
+    from public_admin.admin import PublicModelAdmin
+
+
+    class BeverageModelAdmin(ExportMixin, PublicModelAdmin):
+        pass
+
+Exporting is the only exception to the GET-only rule: POST requests are allowed in the export view (since its form only reads data). Import views are always blocked.
+
+.. warning::
+
+    Any GET request is allowed in a public admin, including GET requests to custom views you add in ``get_urls``. Make sure these views are **read-only** on GET: anonymous visitors can reach them.
