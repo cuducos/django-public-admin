@@ -7,7 +7,7 @@ Requirements
 ------------
 
 * Git
-* `uv <>https://docs.astral.sh/uv/`_
+* `uv <https://docs.astral.sh/uv/>`_
 
 Running the example
 -------------------
