@@ -1,4 +1,5 @@
 from functools import update_wrapper
+from importlib.util import find_spec
 
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import AnonymousUser
@@ -58,6 +59,7 @@ class PublicAdminSite(AdminSite):
         if isinstance(public_apps, PublicApp):
             public_apps = (public_apps,)
         self.dummy_user = DummyUser(public_apps)
+        self._export_url_names, self._import_url_names = set(), set()
 
     @staticmethod
     def valid_url(url):
@@ -80,13 +82,13 @@ class PublicAdminSite(AdminSite):
 
     def has_permission(self, request):
         """Blocks all non-GET requests, except POST requests to export views
-        (e.g. Django import / export's export form, which only reads data).
-        Also blocks import views altogether."""
-        url_name = getattr(request.resolver_match, "url_name", None) or ""
-        if url_name.endswith("_import"):
+        registered by Django import / export (its export form only reads
+        data). Also blocks import views altogether."""
+        url_name = getattr(request.resolver_match, "url_name", None)
+        if url_name in self._import_url_names:
             return False
         if request.method == "POST":
-            return url_name.endswith("_export")
+            return url_name in self._export_url_names
         return request.method == "GET"
 
     def admin_view(self, view, cacheable=False):
@@ -111,4 +113,22 @@ class PublicAdminSite(AdminSite):
         if not self.dummy_user.has_perm(permission):
             msg = f"{model._meta.object_name} is not listed in this public app."
             raise UnauthorizedModelError(msg)
-        return super(PublicAdminSite, self).register(model, admin_class)
+        super(PublicAdminSite, self).register(model, admin_class)
+        self._register_import_export_urls(self._registry[model])
+
+    def _register_import_export_urls(self, model_admin):
+        """Keeps track of the URL names created by Django import / export, so
+        permissions are based on the model admin class and not on URL names
+        (which anyone can choose in `get_urls`)."""
+        if find_spec("import_export") is None:
+            return
+
+        from import_export.admin import ExportMixin, ImportMixin
+
+        if isinstance(model_admin, ExportMixin):
+            info = model_admin.get_model_info()
+            self._export_url_names.add("%s_%s_export" % info)
+        if isinstance(model_admin, ImportMixin):
+            info = model_admin.get_model_info()
+            self._import_url_names.add("%s_%s_import" % info)
+            self._import_url_names.add("%s_%s_process_import" % info)
