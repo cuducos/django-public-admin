@@ -98,3 +98,7 @@ Django import / export
         pass
 
 Exporting is the only exception to the GET-only rule: POST requests are allowed in the export view (since its form only reads data). Import views are always blocked.
+
+.. warning::
+
+    Any GET request is allowed in a public admin, including GET requests to custom views you add in ``get_urls``. Make sure these views are **read-only** on GET: anonymous visitors can reach them.
