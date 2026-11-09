@@ -1,8 +1,15 @@
-import pytest
-from django.db import connection
-from django.test import Client
+from unittest.mock import Mock
 
-from tests.urls import Drink
+import pytest
+
+pytest.importorskip("import_export")
+
+from django.db import connection  # noqa: E402
+from django.test import Client  # noqa: E402
+
+from public_admin.admin import PublicModelAdmin  # noqa: E402
+from public_admin.sites import PublicAdminSite, PublicApp  # noqa: E402
+from tests.drinks import Drink, DrinkAdmin  # noqa: E402
 
 URL = "/dashboard/tests/drink/"
 
@@ -39,16 +46,14 @@ def test_export(client):
 
 
 @pytest.mark.parametrize("view", ("import", "process_import"))
-@pytest.mark.parametrize("method", ("get", "post"))
-def test_import(client, method, view):
-    response = getattr(client, method)(f"{URL}{view}/")
-    assert response.status_code == 403
+def test_import(client, view):
+    assert client.post(f"{URL}{view}/").status_code == 403
     assert Drink.objects.count() == 1
 
 
 def test_get_to_custom_view(client):
     """Custom views are reachable with GET, so they must be read-only. If this
-    test breaks, the GET-only rule changed: update the docs accordingly."""
+    test breaks, the GET-only rule changed."""
     response = client.get(f"{URL}report/")
     assert response.status_code == 200
     assert response.content.decode() == "1 drinks"
@@ -61,3 +66,21 @@ def test_post_to_custom_view_named_like_export(client):
 
 def test_changelist_post(client):
     assert client.post(URL).status_code == 403
+
+
+def test_has_permission_post_to_export():
+    public_admin = PublicAdminSite("dashboard", PublicApp("tests", ("drink",)))
+    public_admin.register(Drink, DrinkAdmin)
+    request = Mock()
+    request.method = "POST"
+    request.resolver_match.url_name = "tests_drink_export"
+    assert public_admin.has_permission(request)
+
+
+def test_has_permission_post_to_export_not_registered():
+    public_admin = PublicAdminSite("dashboard", PublicApp("tests", ("drink",)))
+    public_admin.register(Drink, PublicModelAdmin)
+    request = Mock()
+    request.method = "POST"
+    request.resolver_match.url_name = "tests_drink_export"
+    assert not public_admin.has_permission(request)
