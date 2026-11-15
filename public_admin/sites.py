@@ -8,11 +8,12 @@ from django.views.decorators.csrf import csrf_protect
 from public_admin.exceptions import UnauthorizedModelError
 
 try:
-    from import_export.admin import ExportMixin
+    from import_export.admin import ExportMixin, ImportMixin
 except ImportError:
     ExportMixin = None
+    ImportMixin = None
 
-HAS_IMPORT_EXPORT = ExportMixin is not None
+HAS_IMPORT_EXPORT = ExportMixin is not None and ImportMixin is not None
 
 
 class PublicApp:
@@ -135,3 +136,8 @@ class PublicAdminSite(AdminSite):
         if HAS_IMPORT_EXPORT and isinstance(model_admin, ExportMixin):
             name = "%s_%s_export" % model_admin.get_model_info()
             self._export_url_names.add(name)
+
+        # set in the instance because the import / export mixins come before
+        # `PublicModelAdmin` in the MRO, so an override there would never run
+        if HAS_IMPORT_EXPORT and isinstance(model_admin, ImportMixin):
+            model_admin.has_import_permission = lambda request: False

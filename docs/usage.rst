@@ -97,4 +97,4 @@ Django import / export
     class BeverageModelAdmin(ExportMixin, PublicModelAdmin):
         pass
 
-Exporting is the only exception to the GET-only rule: only these POST requests are allowed in the export view (since its form only reads data). Import forms might show up, but submitting them is always blocked.
+Exporting is the only exception to the GET-only rule: only these POST requests are allowed in the export view (since its form only reads data). Import views are always blocked.
