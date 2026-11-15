@@ -1,19 +1,23 @@
+from collections.abc import Callable, Iterable, Sequence
 from functools import update_wrapper
+from importlib import import_module
+from typing import Any
 
+from django.contrib.admin import ModelAdmin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import AnonymousUser
-from django.http import HttpResponseForbidden
+from django.db.models import Model
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
+from django.urls.resolvers import URLPattern
 from django.views.decorators.csrf import csrf_protect
 
 from public_admin.exceptions import UnauthorizedModelError
 
 try:
-    from import_export.admin import ExportMixin, ImportMixin
+    import_module("import_export.admin")
+    HAS_IMPORT_EXPORT = True
 except ImportError:
-    ExportMixin = None
-    ImportMixin = None
-
-HAS_IMPORT_EXPORT = ExportMixin is not None and ImportMixin is not None
+    HAS_IMPORT_EXPORT = False
 
 
 class PublicApp:
@@ -22,9 +26,11 @@ class PublicApp:
     sequence of strings with the name of the models to allowed in a public
     admin."""
 
-    def __init__(self, name, models):
+    def __init__(self, name: str, models: Iterable[str]) -> None:
         self.name = name
-        self.permissions = tuple(f"{name}.view_{model}" for model in models)
+        self.permissions: tuple[str, ...] = tuple(
+            f"{name}.view_{model}" for model in models
+        )
 
 
 class DummyUser(AnonymousUser):
@@ -32,24 +38,26 @@ class DummyUser(AnonymousUser):
     objects from certain Django apps and models.`pubic_apps` should be a
     sequence of instances of `public_admin.sites.PublicApp`."""
 
-    def __init__(self, public_apps, *args, **kwargs):
-        self.public_apps = set(app.name for app in public_apps)
-        self.permissions = set(
+    def __init__(
+        self, public_apps: Iterable[PublicApp], *args: Any, **kwargs: Any
+    ) -> None:
+        self.public_apps: set[str] = set(app.name for app in public_apps)
+        self.permissions: set[str] = set(
             permission.lower()
             for public_app in public_apps
             for permission in public_app.permissions
         )
         super().__init__(*args, **kwargs)
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self, module: str) -> bool:
         """Only grant permission if the `app` was passed as a
         `public_admin.sites.PublicApp`."""
-        return app_label in self.public_apps
+        return module in self.public_apps
 
-    def has_perm(self, permission, obj=None):
+    def has_perm(self, perm: str, obj: Model | None = None) -> bool:
         """Only grant permission if the app and model were passed in a
         `public_admin.sites.PublicApp`."""
-        return permission.lower() in self.permissions
+        return perm.lower() in self.permissions
 
 
 class PublicAdminSite(AdminSite):
@@ -59,19 +67,21 @@ class PublicAdminSite(AdminSite):
     and `pubic_apps` can be one instance of `public_admin.sites.PublicApp` or a
     sequence of them."""
 
-    def __init__(self, name="public_admin", public_apps=()):
+    def __init__(
+        self,
+        name: str = "public_admin",
+        public_apps: PublicApp | Sequence[PublicApp] = (),
+    ) -> None:
         super().__init__(name=name)
         self._actions, self._global_actions = {}, {}
 
         if isinstance(public_apps, PublicApp):
             public_apps = (public_apps,)
         self.dummy_user = DummyUser(public_apps)
-
-        if HAS_IMPORT_EXPORT:
-            self._export_url_names = set()
+        self._export_url_names: set[str] = set()
 
     @staticmethod
-    def valid_url(url):
+    def valid_url(url: URLPattern) -> bool:
         """This method removes URLs based on their path."""
         forbidden = (
             "auth",
@@ -84,12 +94,12 @@ class PublicAdminSite(AdminSite):
         return all(label not in url.pattern.regex.pattern for label in forbidden)
 
     @property
-    def urls(self):
+    def urls(self) -> tuple[list[URLPattern], str, str]:
         """List the URLs in this admin site."""
         urls = (url for url in self.get_urls() if self.valid_url(url))
         return list(urls), "admin", self.name
 
-    def has_permission(self, request):
+    def has_permission(self, request: HttpRequest) -> bool:
         """Blocks all non-GET requests, except POST requests to export views
         registered by Django import / export (its export form only reads
         data)."""
@@ -106,12 +116,14 @@ class PublicAdminSite(AdminSite):
             and name in self._export_url_names
         )
 
-    def admin_view(self, view, cacheable=False):
+    def admin_view(
+        self, view: Callable[..., HttpResponse], cacheable: bool = False
+    ) -> Callable[..., HttpResponse]:
         """Injects the `public_admin.sites.DummyUser` in every request in this
         admin site."""
 
-        def inner(request, *args, **kwargs):
-            request.user = self.dummy_user
+        def inner(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+            setattr(request, "user", self.dummy_user)
             if not self.has_permission(request):
                 return HttpResponseForbidden()
             return view(request, *args, **kwargs)
@@ -121,23 +133,32 @@ class PublicAdminSite(AdminSite):
 
         return update_wrapper(inner, view)
 
-    def register(self, model, admin_class=None, **options):
+    def register(
+        self,
+        model_or_iterable: type[Model],
+        admin_class: type[ModelAdmin] | None = None,
+        **options: Any,
+    ) -> None:
         """Verifies whether the model about to be registered is allowed in this
         public admin site"""
-        permission = f"{model._meta.app_label}.view_{model._meta.model_name}"
+        meta = getattr(model_or_iterable, "_meta")
+        permission = f"{meta.app_label}.view_{meta.model_name}"
         if not self.dummy_user.has_perm(permission):
-            msg = f"{model._meta.object_name} is not listed in this public app."
+            msg = f"{meta.object_name} is not listed in this public app."
             raise UnauthorizedModelError(msg)
-        super(PublicAdminSite, self).register(model, admin_class)
+        super().register(model_or_iterable, admin_class)
 
         # permissions are based on the model admin class and not on URL names
         # (which anyone can choose in `get_urls`)
-        model_admin = self._registry[model]
-        if HAS_IMPORT_EXPORT and isinstance(model_admin, ExportMixin):
-            name = "%s_%s_export" % model_admin.get_model_info()
-            self._export_url_names.add(name)
+        model_admin = self._registry[model_or_iterable]
+        if HAS_IMPORT_EXPORT:
+            from import_export.admin import ExportMixin, ImportMixin
 
-        # set in the instance because the import / export mixins come before
-        # `PublicModelAdmin` in the MRO, so an override there would never run
-        if HAS_IMPORT_EXPORT and isinstance(model_admin, ImportMixin):
-            model_admin.has_import_permission = lambda request: False
+            if isinstance(model_admin, ExportMixin):
+                name = "%s_%s_export" % model_admin.get_model_info()
+                self._export_url_names.add(name)
+
+            # set in the instance because the import / export mixins come before
+            # `PublicModelAdmin` in the MRO, so an override there would never run
+            if isinstance(model_admin, ImportMixin):
+                model_admin.has_import_permission = lambda request: False

@@ -6,14 +6,14 @@ PUBLIC_APPS = (
 )
 
 
-def test_has_module_permissions():
+def test_has_module_permissions() -> None:
     user = DummyUser(PUBLIC_APPS)
     assert user.has_module_perms("my_open_house")
     assert user.has_module_perms("library")
     assert not user.has_module_perms("core")
 
 
-def test_has_permissions():
+def test_has_permissions() -> None:
     user = DummyUser(PUBLIC_APPS)
     assert user.has_perm("my_open_house.view_beverage")
     assert user.has_perm("my_open_house.view_snack")
