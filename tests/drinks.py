@@ -1,6 +1,10 @@
+from typing import ClassVar
+
 from django.db import models
-from django.http import HttpResponse
+from django.db.models import Manager
+from django.http import HttpRequest, HttpResponse
 from django.urls import path
+from django.urls.resolvers import URLPattern
 from import_export.admin import ImportExportMixin
 
 from public_admin.admin import PublicModelAdmin
@@ -9,13 +13,14 @@ from public_admin.sites import PublicAdminSite, PublicApp
 
 class Drink(models.Model):
     name = models.CharField(max_length=32)
+    objects: ClassVar[Manager]
 
     class Meta:
         app_label = "tests"
 
 
 class DrinkAdmin(ImportExportMixin, PublicModelAdmin):
-    def get_urls(self):
+    def get_urls(self) -> list[URLPattern]:
         urls = [
             path(
                 "report/",
@@ -30,11 +35,11 @@ class DrinkAdmin(ImportExportMixin, PublicModelAdmin):
         ]
         return urls + super().get_urls()
 
-    def report(self, request):
+    def report(self, request: HttpRequest) -> HttpResponse:
         """A custom read-only view."""
         return HttpResponse(f"{Drink.objects.count()} drinks")
 
-    def report_export(self, request):
+    def report_export(self, request: HttpRequest) -> HttpResponse:
         """A custom view whose name ends in `_export` but writes on POST."""
         Drink.objects.create(name="Anonymous POST wrote this")
         return HttpResponse()

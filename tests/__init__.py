@@ -1,9 +1,9 @@
 from importlib.util import find_spec
 
-import django
+from django import setup
 from django.conf import settings
 
-INSTALLED_APPS = [
+INSTALLED_APPS: list[str] = [
     "public_admin",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,4 +41,4 @@ settings.configure(
 )
 
 
-django.setup()
+setup()

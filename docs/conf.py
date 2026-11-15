@@ -1,14 +1,14 @@
-import os
-import sys
 from importlib import metadata
+from os.path import abspath
 from pathlib import Path
+from sys import path
 from typing import List
 
-import django
+from django import setup
 from django.conf import settings
 
 # add path to sys.path (this might be different in your project)
-sys.path.insert(0, os.path.abspath(".."))
+path.insert(0, abspath(".."))
 
 # pass settings into configure
 settings.configure(
@@ -22,7 +22,7 @@ settings.configure(
 )
 
 # call django.setup to load installed apps and other stuff
-django.setup()
+setup()
 
 # Configuration file for the Sphinx documentation builder.
 #
@@ -36,7 +36,7 @@ django.setup()
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 
-sys.path.insert(0, str(Path().absolute().parent.parent))
+path.insert(0, str(Path().absolute().parent.parent))
 
 
 # -- Project information -----------------------------------------------------
