@@ -1,7 +1,9 @@
 from unittest.mock import Mock, patch
 
-import pytest
 from django.db import models
+from django.test import RequestFactory
+from django.urls import path
+from pytest import raises
 
 from public_admin.exceptions import UnauthorizedModelError
 from public_admin.sites import PublicAdminSite, PublicApp
@@ -23,23 +25,21 @@ PUBLIC_APPS = (
 )
 
 
-def test_init():
+def test_init() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     assert not public_admin.actions
     assert not public_admin._global_actions
     assert public_admin.name == "dashboard"
 
 
-def test_valid_url():
+def test_valid_url() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
-    valid, invalid = Mock(), Mock()
-    valid.pattern.regex.pattern = "/my_open_house/"
-    invalid.pattern.regex.pattern = "/my_open_house/add/"
+    valid, invalid = path("my_open_house/", Mock()), path("my_open_house/add/", Mock())
     assert public_admin.valid_url(valid)
     assert not public_admin.valid_url(invalid)
 
 
-def test_urls():
+def test_urls() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     with patch.object(PublicAdminSite, "get_urls") as get_urls:
         get_urls.return_value = range(3)
@@ -48,38 +48,34 @@ def test_urls():
             assert public_admin.urls == ([0, 2], "admin", "dashboard")
 
 
-def test_has_permission_get():
+def test_has_permission_get() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
-    request = Mock()
-    request.method = "GET"
-    request.resolver_match.url_name = "my_open_house_beverage_changelist"
+    request = RequestFactory().get("/")
     assert public_admin.has_permission(request)
 
 
-def test_has_permission_post():
+def test_has_permission_post() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
-    request = Mock()
-    request.method = "POST"
-    request.resolver_match.url_name = "my_open_house_beverage_changelist"
+    request = RequestFactory().post("/")
+    request.resolver_match = Mock(url_name="my_open_house_beverage_changelist")
     assert not public_admin.has_permission(request)
 
 
-def test_has_permission_without_resolver_match():
+def test_has_permission_without_resolver_match() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
-    request = Mock()
+    request = RequestFactory().get("/")
     request.resolver_match = None
-    request.method = "GET"
     assert public_admin.has_permission(request)
     request.method = "POST"
     assert not public_admin.has_permission(request)
 
 
-def test_authorized_model_can_be_registered():
+def test_authorized_model_can_be_registered() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     public_admin.register(Beverage)
 
 
-def test_non_authorized_model_cannot_be_registered():
+def test_non_authorized_model_cannot_be_registered() -> None:
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
-    with pytest.raises(UnauthorizedModelError):
+    with raises(UnauthorizedModelError):
         public_admin.register(Music)
