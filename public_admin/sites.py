@@ -1,14 +1,14 @@
 from collections.abc import Callable, Iterable, Sequence
 from functools import update_wrapper
 from importlib import import_module
-from typing import Any
+from typing import Any, Literal
 
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.sites import AdminSite
 from django.contrib.auth.models import AnonymousUser
 from django.db.models import Model
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
-from django.urls.resolvers import URLPattern
+from django.urls.resolvers import URLPattern, URLResolver
 from django.views.decorators.csrf import csrf_protect
 
 from public_admin.exceptions import UnauthorizedModelError
@@ -81,7 +81,7 @@ class PublicAdminSite(AdminSite):
         self._export_url_names: set[str] = set()
 
     @staticmethod
-    def valid_url(url: URLPattern) -> bool:
+    def valid_url(url: URLResolver | URLPattern) -> bool:
         """This method removes URLs based on their path."""
         forbidden = (
             "auth",
@@ -94,7 +94,7 @@ class PublicAdminSite(AdminSite):
         return all(label not in url.pattern.regex.pattern for label in forbidden)
 
     @property
-    def urls(self) -> tuple[list[URLPattern], str, str]:
+    def urls(self) -> tuple[list[URLResolver | URLPattern], Literal["admin"], str]:
         """List the URLs in this admin site."""
         urls = (url for url in self.get_urls() if self.valid_url(url))
         return list(urls), "admin", self.name
@@ -116,9 +116,7 @@ class PublicAdminSite(AdminSite):
             and name in self._export_url_names
         )
 
-    def admin_view(
-        self, view: Callable[..., HttpResponse], cacheable: bool = False
-    ) -> Callable[..., HttpResponse]:
+    def admin_view(self, view: Callable[..., HttpResponse], cacheable: bool = False):
         """Injects the `public_admin.sites.DummyUser` in every request in this
         admin site."""
 
@@ -128,10 +126,9 @@ class PublicAdminSite(AdminSite):
                 return HttpResponseForbidden()
             return view(request, *args, **kwargs)
 
-        if not getattr(view, "csrf_exempt", False):
-            inner = csrf_protect(inner)
-
-        return update_wrapper(inner, view)
+        if getattr(view, "csrf_exempt", False):
+            return update_wrapper(inner, view)
+        return update_wrapper(csrf_protect(inner), view)
 
     def register(
         self,
