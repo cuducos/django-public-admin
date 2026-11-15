@@ -30,7 +30,10 @@ def client():
 
 
 def test_changelist(client):
-    assert client.get(URL).status_code == 200
+    response = client.get(URL)
+    assert response.status_code == 200
+    assert f"{URL}export/" in response.content.decode()
+    assert f"{URL}import/" not in response.content.decode()
 
 
 def test_export_form(client):
@@ -49,6 +52,10 @@ def test_export(client):
 def test_import(client, view):
     assert client.post(f"{URL}{view}/").status_code == 403
     assert Drink.objects.count() == 1
+
+
+def test_import_form(client):
+    assert client.get(f"{URL}import/").status_code == 403
 
 
 def test_get_to_custom_view(client):
