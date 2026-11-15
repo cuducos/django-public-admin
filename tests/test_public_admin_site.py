@@ -52,12 +52,24 @@ def test_has_permission_get():
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     request = Mock()
     request.method = "GET"
+    request.resolver_match.url_name = "my_open_house_beverage_changelist"
     assert public_admin.has_permission(request)
 
 
 def test_has_permission_post():
     public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
     request = Mock()
+    request.method = "POST"
+    request.resolver_match.url_name = "my_open_house_beverage_changelist"
+    assert not public_admin.has_permission(request)
+
+
+def test_has_permission_without_resolver_match():
+    public_admin = PublicAdminSite("dashboard", PUBLIC_APPS)
+    request = Mock()
+    request.resolver_match = None
+    request.method = "GET"
+    assert public_admin.has_permission(request)
     request.method = "POST"
     assert not public_admin.has_permission(request)
 

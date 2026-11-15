@@ -14,11 +14,14 @@ jobs:
         django-version:
           - "5.0"
           - "4.2"
-    name: Python ${{ matrix.python-version }} & Django ${{ matrix.django-version }}
+        import-export:
+          - ""
+          - "-importexport"
+    name: Python ${{ matrix.python-version }} & Django ${{ matrix.django-version }}${{ matrix.import-export }}
     steps:
     - uses: actions/checkout@v5
     - uses: actions/setup-python@v6
       with:
         python-version: ${{ matrix.python-version }}
     - uses: astral-sh/setup-uv@v6
-    - run: uv run tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}
+    - run: uv run tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}${{ matrix.import-export }}

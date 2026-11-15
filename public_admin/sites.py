@@ -7,6 +7,14 @@ from django.views.decorators.csrf import csrf_protect
 
 from public_admin.exceptions import UnauthorizedModelError
 
+try:
+    from import_export.admin import ExportMixin, ImportMixin
+except ImportError:
+    ExportMixin = None
+    ImportMixin = None
+
+HAS_IMPORT_EXPORT = ExportMixin is not None and ImportMixin is not None
+
 
 class PublicApp:
     """Holds the permission strings for each model in a Django app. `name`
@@ -59,6 +67,9 @@ class PublicAdminSite(AdminSite):
             public_apps = (public_apps,)
         self.dummy_user = DummyUser(public_apps)
 
+        if HAS_IMPORT_EXPORT:
+            self._export_url_names = set()
+
     @staticmethod
     def valid_url(url):
         """This method removes URLs based on their path."""
@@ -79,8 +90,21 @@ class PublicAdminSite(AdminSite):
         return list(urls), "admin", self.name
 
     def has_permission(self, request):
-        """Blocks all non-GET requests."""
-        return request.method == "GET"
+        """Blocks all non-GET requests, except POST requests to export views
+        registered by Django import / export (its export form only reads
+        data)."""
+        if request.method == "GET":
+            return True
+
+        if not HAS_IMPORT_EXPORT:
+            return False
+
+        name = getattr(request.resolver_match, "url_name", None)
+        return (
+            name is not None
+            and request.method == "POST"
+            and name in self._export_url_names
+        )
 
     def admin_view(self, view, cacheable=False):
         """Injects the `public_admin.sites.DummyUser` in every request in this
@@ -104,4 +128,16 @@ class PublicAdminSite(AdminSite):
         if not self.dummy_user.has_perm(permission):
             msg = f"{model._meta.object_name} is not listed in this public app."
             raise UnauthorizedModelError(msg)
-        return super(PublicAdminSite, self).register(model, admin_class)
+        super(PublicAdminSite, self).register(model, admin_class)
+
+        # permissions are based on the model admin class and not on URL names
+        # (which anyone can choose in `get_urls`)
+        model_admin = self._registry[model]
+        if HAS_IMPORT_EXPORT and isinstance(model_admin, ExportMixin):
+            name = "%s_%s_export" % model_admin.get_model_info()
+            self._export_url_names.add(name)
+
+        # set in the instance because the import / export mixins come before
+        # `PublicModelAdmin` in the MRO, so an override there would never run
+        if HAS_IMPORT_EXPORT and isinstance(model_admin, ImportMixin):
+            model_admin.has_import_permission = lambda request: False
