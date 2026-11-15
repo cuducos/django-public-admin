@@ -7,7 +7,7 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 
 ## Contributing
 
-We use [`uv`](https://docs.astral.sh/uv/) packaghe manager and `tox` to run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters):
+We use [`uv`](https://docs.astral.sh/uv/) packaghe manager and `tox` to run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters), and [ty](https://astral.sh/ty) for type checking:
 
 ```console
 $ uv run tox

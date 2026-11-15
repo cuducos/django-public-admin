@@ -37,12 +37,13 @@ select = ["E", "F", "I"]
 [tool.hatch.build.targets.wheel]
 packages = ["public_admin",]
 
-[tool.uv]
-dev-dependencies = [
+[dependency-groups]
+dev = [
     "django-import-export>=4.0",
     "pytest-ruff>=0.4.1",
     "tox>=4.18.0",
     "tox-uv>=1",
+    "ty>=0.0.1",
 ]
 
 [build-system]
