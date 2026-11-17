@@ -1,6 +1,7 @@
 # Changelog
 
 **Unreleased**
+  * Django import/export plugin support
   * Python 3.11, 3.12, 3.13, 3.14 and 3.15 support (Python 3.10 dropped)
   * Django 5.2, 6.0 and 6.1 support (Django 4.2 and 5.0 dropped)
 
