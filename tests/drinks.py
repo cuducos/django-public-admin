@@ -20,9 +20,7 @@ class Drink(models.Model):
 
 
 class DrinkAdmin(ImportExportMixin, PublicModelAdmin):
-    def get_urls(  # pyright: ignore[reportIncompatibleMethodOverride]
-        self,
-    ) -> list[URLResolver | URLPattern]:
+    def get_urls(self) -> list[URLResolver | URLPattern]:
         urls = [
             path(
                 "report/",
@@ -39,7 +37,7 @@ class DrinkAdmin(ImportExportMixin, PublicModelAdmin):
 
     def report(self, request: HttpRequest) -> HttpResponse:
         """A custom read-only view."""
-        return HttpResponse(f"{Drink.objects.count()} drinks".encode())
+        return HttpResponse(f"{Drink.objects.count()} drinks")
 
     def report_export(self, request: HttpRequest) -> HttpResponse:
         """A custom view whose name ends in `_export` but writes on POST."""
