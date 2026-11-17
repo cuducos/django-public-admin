@@ -12,26 +12,20 @@ class PublicModelAdmin(ModelAdmin):
     """This mimics the Django's native ModelAdmin but filters URLs that should
     not exist in a public admin, and deals with request-based permissions."""
 
-    def has_fields_allowlist(self) -> bool:
-        """Whether the fields shown in the object page are explicitly listed
-        (in `fields` or `fieldsets`). `exclude` is not enough: any field added
-        to the model later would be public by default."""
-        return self.fields is not None or self.fieldsets is not None
-
     def has_view_permission(
         self, request: HttpRequest, obj: Model | None = None
     ) -> bool:
-        """Only allows view requests if the method is GET. Object pages are
-        only allowed if their fields are explicitly listed."""
-        if request.method != "GET":
+        """Only allows view requests if the method is GET. Object pages also
+        require explicitly listed fields (`fields` or `fieldsets`)."""
+        if obj is not None and self.fields is None and self.fieldsets is None:
             return False
-        return obj is None or self.has_fields_allowlist()
+        return request.method == "GET"
 
     def get_list_display_links(
         self, request: HttpRequest, list_display: Sequence[str]
     ) -> Sequence[str] | None:
-        """Removes links to object pages if they are not allowed."""
-        if not self.has_fields_allowlist():
+        """No links to object pages without explicitly listed fields."""
+        if self.fields is None and self.fieldsets is None:
             return None
         return super().get_list_display_links(request, list_display)
 
