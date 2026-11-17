@@ -1,5 +1,8 @@
 # Changelog
 
+**Unreleased**
+  * Django import/export plugin support
+
 **0.0.6** (Apr 14, 2024)
   * Python 3.10, 3.11 and 3.12 support
   * Django 4 and 5 support
