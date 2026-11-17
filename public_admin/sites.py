@@ -116,7 +116,9 @@ class PublicAdminSite(AdminSite):
             and name in self._export_url_names
         )
 
-    def admin_view(self, view: Callable[..., HttpResponse], cacheable: bool = False):
+    def admin_view(
+        self, view: Callable[..., HttpResponse], cacheable: bool = False
+    ) -> Callable[..., HttpResponse]:
         """Injects the `public_admin.sites.DummyUser` in every request in this
         admin site."""
 
