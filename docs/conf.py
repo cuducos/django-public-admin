@@ -55,7 +55,6 @@ release = metadata.version("django-public-admin")
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-    "readthedocs_ext.readthedocs",
     "sphinx.ext.autodoc",
     "sphinx.ext.coverage",
     "sphinx_rtd_theme",
