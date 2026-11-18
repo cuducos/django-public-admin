@@ -3,6 +3,11 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,6 +43,8 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
     - uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
     - run: uv run tox -e py${{ matrix.python-version }}-django${{ matrix.django-version }}${{ matrix.import-export }}
 
   typecheck:
@@ -45,14 +52,15 @@ jobs:
     steps:
     - uses: actions/checkout@v5
     - uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
     - run: uv run tox -e typecheck
 
   docs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-    - uses: actions/setup-python@v6
+    - uses: astral-sh/setup-uv@v6
       with:
-        python-version: "3.12"
-    - run: pip install -r docs/requirements.txt
-    - run: sphinx-build -W --keep-going -b html docs docs/_build
+        enable-cache: true
+    - run: uv run --python 3.13 --with-requirements docs/requirements.txt sphinx-build -W --keep-going -b html docs docs/_build

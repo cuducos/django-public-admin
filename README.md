@@ -7,7 +7,7 @@ A public and read-only version of the [Django Admin](https://docs.djangoproject.
 
 ## Contributing
 
-We use [`uv`](https://docs.astral.sh/uv/) packaghe manager and `tox` to run tests with different Python ad Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters), and [ty](https://astral.sh/ty) for type checking:
+We use [`uv`](https://docs.astral.sh/uv/) package manager and `tox` to run tests with different Python and Django versions. Also we use [Ruff](https://astral.sh/ruff) integrated with the tests (including format checks and linters), and [ty](https://astral.sh/ty) for type checking:
 
 ```console
 $ uv run tox
@@ -17,12 +17,11 @@ $ uv run tox
 
 To build the docs we use [Sphinx](https://www.sphinx-doc.org/en/):
 
-```
-$ uv run pip install -r docs/requirements.txt
-$ uv run sphinx-build docs docs/_build/
+```console
+$ uv run --with-requirements docs/requirements.txt sphinx-build docs docs/_build/
 ```
 
-Them just jump to `docs/_build/index.html`.
+Then just jump to `docs/_build/index.html`.
 
 ## License & Credits
 
