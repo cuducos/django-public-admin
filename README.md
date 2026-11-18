@@ -3,7 +3,7 @@
 # Django Public Admin
 
 
-A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/3.0/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data. Check the [documentation](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) for more information on how to use it.
+A public and read-only version of the [Django Admin](https://docs.djangoproject.com/en/stable/ref/contrib/admin/). A drop-in replacement for Django's native `AdminSite` and `ModelAdmin` for publicly accessible data. Check the [documentation](https://django-public-admin.readthedocs.io/en/latest/?badge=latest) for more information on how to use it.
 
 ## Contributing
 
