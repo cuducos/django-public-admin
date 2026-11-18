@@ -4,6 +4,7 @@
   * Django import/export plugin support
   * Python 3.11, 3.12, 3.13, 3.14 and 3.15 support (Python 3.10 dropped)
   * Django 5.2, 6.0 and 6.1 support (Django 4.2 and 5.0 dropped)
+  * Object pages require an explicit list of fields (`fields` or `fieldsets`) in `PublicModelAdmin`, otherwise they return 403 (breaking change)
 
 **0.0.6** (Apr 14, 2024)
   * Python 3.10, 3.11 and 3.12 support

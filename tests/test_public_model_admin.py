@@ -1,5 +1,6 @@
 from unittest.mock import Mock
 
+import pytest
 from django.test import RequestFactory
 
 from public_admin.admin import PublicModelAdmin
@@ -34,3 +35,18 @@ def test_permissions_with_post() -> None:
 def test_urls() -> None:
     public_model_admin = PublicModelAdmin(Mock(), Mock())
     assert len(public_model_admin.get_urls()) == 4
+
+
+@pytest.mark.parametrize(
+    "attrs,allowed",
+    (
+        ({}, False),
+        ({"exclude": ("secret",)}, False),
+        ({"fields": ("name",)}, True),
+        ({"fieldsets": ((None, {"fields": ("name",)}),)}, True),
+    ),
+)
+def test_object_permission(attrs: dict, allowed: bool) -> None:
+    request = RequestFactory().get("/")
+    admin = type("Admin", (PublicModelAdmin,), attrs)(Mock(), Mock())
+    assert admin.has_view_permission(request, Mock()) is allowed

@@ -38,7 +38,7 @@ Create and register your ``PublicModelAdmin``
     
     
     class BeverageModelAdmin(PublicModelAdmin):
-        # ...
+        fields = ("name", "price")
 
 
     class SnackModelAdmin(PublicModelAdmin):
@@ -47,6 +47,8 @@ Create and register your ``PublicModelAdmin``
 
     public_admin.register(Beverage, BeverageModelAdmin)
     public_admin.register(Snack, SnackModelAdmin)
+
+Object pages (e.g. ``/beverage/42/change/``) are only available if you explicitly list the fields to show, using ``fields`` or ``fieldsets``. Otherwise they return 403 and the list does not link to them. ``exclude`` is not enough, since any field added to the model later would become public.
 
 Add your *Django Public Admin* URLs
 -----------------------------------

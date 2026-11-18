@@ -6,6 +6,7 @@ from public_admin.sites import PublicAdminSite, PublicApp
 class BeverageModelAdmin(PublicModelAdmin):
     list_display = ("name", "amount", "alcoholic")
     list_filter = ("alcoholic",)
+    fields = ("name", "amount", "alcoholic")
 
 
 class SnackModelAdmin(PublicModelAdmin):
