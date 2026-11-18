@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models import Manager
 from django.http import HttpRequest, HttpResponse
 from django.urls import path
-from django.urls.resolvers import URLPattern
+from django.urls.resolvers import URLPattern, URLResolver
 from import_export.admin import ImportExportMixin
 
 from public_admin.admin import PublicModelAdmin
@@ -20,7 +20,7 @@ class Drink(models.Model):
 
 
 class DrinkAdmin(ImportExportMixin, PublicModelAdmin):
-    def get_urls(self) -> list[URLPattern]:
+    def get_urls(self) -> list[URLResolver | URLPattern]:
         urls = [
             path(
                 "report/",

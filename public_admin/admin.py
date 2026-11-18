@@ -1,7 +1,7 @@
 from django.contrib.admin import ModelAdmin
 from django.db.models import Model
 from django.http import HttpRequest
-from django.urls.resolvers import URLPattern
+from django.urls.resolvers import URLPattern, URLResolver
 
 from public_admin.sites import PublicAdminSite
 
@@ -32,6 +32,6 @@ class PublicModelAdmin(ModelAdmin):
         """Denies permission to any request trying to delete objects."""
         return False
 
-    def get_urls(self) -> list[URLPattern]:
+    def get_urls(self) -> list[URLResolver | URLPattern]:
         """Filter out the URLs that should not exist in a public admin."""
         return [url for url in super().get_urls() if PublicAdminSite.valid_url(url)]
